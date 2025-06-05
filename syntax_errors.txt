@@ -1,1 +1,1 @@
-There is no syntax error.
+Syntax Error at token 'i'
