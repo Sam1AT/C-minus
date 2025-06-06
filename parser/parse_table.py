@@ -11,16 +11,15 @@ parsing_table = {
     str(("Declaration-list", "void")): ["Declaration", "Declaration-list"],
     str(("Declaration-list", "(")): ["epsilon"],
     str(("Declaration-list", "NUM")): ["epsilon"],
-    str(("Declaration-list", "ID")): ["epsilon"],
-    str(("Declaration-list", "break")): ["epsilon"],
     str(("Declaration-list", ";")): ["epsilon"],
+    str(("Declaration-list", "ID")): ["epsilon"],
     str(("Declaration-list", "{")): ["epsilon"],
+    str(("Declaration-list", "break")): ["epsilon"],
     str(("Declaration-list", "if")): ["epsilon"],
     str(("Declaration-list", "repeat")): ["epsilon"],
     str(("Declaration-list", "return")): ["epsilon"],
     str(("Declaration-list", "}")): ["epsilon"],
     str(("Declaration-list", "$")): ["epsilon"],
-
 
     # Declaration
     str(("Declaration", "int")): ["Declaration-initial", "Declaration-prime"],
@@ -112,22 +111,23 @@ parsing_table = {
     str(("Return-stmt-prime", "ID")): ["Expression", ";"],
 
     # Expression
+    str(("Expression", "ID")): ["ID", "B"],
     str(("Expression", "(")): ["Simple-expression-zegond"],
     str(("Expression", "NUM")): ["Simple-expression-zegond"],
-    str(("Expression", "ID")): ["ID", "B"],
 
     # B
     str(("B", "=")): ["=", "Expression"],
     str(("B", "[")): ["[", "Expression", "]", "H"],
+    str(("B", "]")): ["Simple-expression-prime"],
     str(("B", "(")): ["Simple-expression-prime"],
-    str(("B", ";")): ["Simple-expression-prime"],
     str(("B", ")")): ["Simple-expression-prime"],
+    str(("B", "*")): ["Simple-expression-prime"],
     str(("B", "+")): ["Simple-expression-prime"],
     str(("B", "-")): ["Simple-expression-prime"],
-    str(("B", "*")): ["Simple-expression-prime"],
     str(("B", "<")): ["Simple-expression-prime"],
-    str(("B", ">")): ["Simple-expression-prime"],
     str(("B", "==")): ["Simple-expression-prime"],
+    str(("B", ";")): ["Simple-expression-prime"],
+    str(("B", ",")): ["Simple-expression-prime"],
 
     # H
     str(("H", "=")): ["=", "Expression"],
@@ -138,6 +138,8 @@ parsing_table = {
     str(("H", "==")): ["G", "D", "C"],
     str(("H", ";")): ["G", "D", "C"],
     str(("H", ")")): ["G", "D", "C"],
+    str(("H", "]")): ["G", "D", "C"],
+    str(("H", ",")): ["G", "D", "C"],
 
     # Simple-expression-zegond
     str(("Simple-expression-zegond", "(")): ["Additive-expression-zegond", "C"],
@@ -145,13 +147,15 @@ parsing_table = {
 
     # Simple-expression-prime
     str(("Simple-expression-prime", "(")): ["Additive-expression-prime", "C"],
+    str(("Simple-expression-prime", "*")): ["Additive-expression-prime", "C"],
+    str(("Simple-expression-prime", "+")): ["Additive-expression-prime", "C"],
+    str(("Simple-expression-prime", "-")): ["Additive-expression-prime", "C"],
+    str(("Simple-expression-prime", "<")): ["Additive-expression-prime", "C"],
+    str(("Simple-expression-prime", "==")): ["Additive-expression-prime", "C"],
     str(("Simple-expression-prime", ";")): ["Additive-expression-prime", "C"],
     str(("Simple-expression-prime", ")")): ["Additive-expression-prime", "C"],
-    str(("Simple-expression-prime", "+")): ["Additive-expression-prime", "C"],
-    str(("Simple-expression-prime", "*")): ["Additive-expression-prime", "C"],
-    str(("Simple-expression-prime", "<")): ["Additive-expression-prime", "C"],
-    str(("Simple-expression-prime", ">")): ["Additive-expression-prime", "C"],
-    str(("Simple-expression-prime", "==")): ["Additive-expression-prime", "C"],
+    str(("Simple-expression-prime", "]")): ["Additive-expression-prime", "C"],
+    str(("Simple-expression-prime", ",")): ["Additive-expression-prime", "C"],
 
     # C
     str(("C", "<")): ["Relop", "Additive-expression"],
@@ -159,6 +163,7 @@ parsing_table = {
     str(("C", ";")): ["epsilon"],
     str(("C", ")")): ["epsilon"],
     str(("C", "]")): ["epsilon"],
+    str(("C", ",")): ["epsilon"],
 
     # Relop
     str(("Relop", "<")): ["<"],
@@ -171,12 +176,15 @@ parsing_table = {
 
     # Additive-expression-prime
     str(("Additive-expression-prime", "(")): ["Term-prime", "D"],
+    str(("Additive-expression-prime", "*")): ["Term-prime", "D"],
+    str(("Additive-expression-prime", "+")): ["Term-prime", "D"],
+    str(("Additive-expression-prime", "-")): ["Term-prime", "D"],
     str(("Additive-expression-prime", "<")): ["Term-prime", "D"],
     str(("Additive-expression-prime", "==")): ["Term-prime", "D"],
     str(("Additive-expression-prime", ";")): ["Term-prime", "D"],
     str(("Additive-expression-prime", ")")): ["Term-prime", "D"],
-    str(("Additive-expression-prime", "+")): ["Term-prime", "D"],
-    str(("Additive-expression-prime", "*")): ["Term-prime", "D"],
+    str(("Additive-expression-prime", "]")): ["Term-prime", "D"],
+    str(("Additive-expression-prime", ",")): ["Term-prime", "D"],
 
     # Additive-expression-zegond
     str(("Additive-expression-zegond", "(")): ["Term-zegond", "D"],
@@ -185,11 +193,12 @@ parsing_table = {
     # D
     str(("D", "+")): ["Addop", "Term", "D"],
     str(("D", "-")): ["Addop", "Term", "D"],
-    str(("D", "<")): ["epsilon"],
-    str(("D", "==")): ["epsilon"],
     str(("D", ";")): ["epsilon"],
     str(("D", ")")): ["epsilon"],
     str(("D", "]")): ["epsilon"],
+    str(("D", "<")): ["epsilon"],
+    str(("D", "==")): ["epsilon"],
+    str(("D", ",")): ["epsilon"],
 
     # Addop
     str(("Addop", "+")): ["+"],
@@ -202,13 +211,15 @@ parsing_table = {
 
     # Term-prime
     str(("Term-prime", "(")): ["Factor-prime", "G"],
+    str(("Term-prime", "*")): ["Factor-prime", "G"],
     str(("Term-prime", "+")): ["Factor-prime", "G"],
     str(("Term-prime", "-")): ["Factor-prime", "G"],
     str(("Term-prime", "<")): ["Factor-prime", "G"],
     str(("Term-prime", "==")): ["Factor-prime", "G"],
     str(("Term-prime", ";")): ["Factor-prime", "G"],
     str(("Term-prime", ")")): ["Factor-prime", "G"],
-    str(("Term-prime", "*")): ["Factor-prime", "G"],
+    str(("Term-prime", "]")): ["Factor-prime", "G"],
+    str(("Term-prime", ",")): ["Factor-prime", "G"],
 
     # Term-zegond
     str(("Term-zegond", "(")): ["Factor-zegond", "G"],
@@ -216,13 +227,14 @@ parsing_table = {
 
     # G
     str(("G", "*")): ["*", "Factor", "G"],
+    str(("G", ";")): ["epsilon"],
+    str(("G", ")")): ["epsilon"],
+    str(("G", "]")): ["epsilon"],
     str(("G", "+")): ["epsilon"],
     str(("G", "-")): ["epsilon"],
     str(("G", "<")): ["epsilon"],
     str(("G", "==")): ["epsilon"],
-    str(("G", ";")): ["epsilon"],
-    str(("G", ")")): ["epsilon"],
-    str(("G", "]")): ["epsilon"],
+    str(("G", ",")): ["epsilon"],
 
     # Factor
     str(("Factor", "(")): ["(", "Expression", ")"],
@@ -239,6 +251,8 @@ parsing_table = {
     str(("Var-call-prime", "==")): ["Var-prime"],
     str(("Var-call-prime", ";")): ["Var-prime"],
     str(("Var-call-prime", ")")): ["Var-prime"],
+    str(("Var-call-prime", "]")): ["Var-prime"],
+    str(("Var-call-prime", ",")): ["Var-prime"],
 
     # Var-prime
     str(("Var-prime", "[")): ["[", "Expression", "]"],
@@ -249,6 +263,8 @@ parsing_table = {
     str(("Var-prime", "==")): ["epsilon"],
     str(("Var-prime", ";")): ["epsilon"],
     str(("Var-prime", ")")): ["epsilon"],
+    str(("Var-prime", "]")): ["epsilon"],
+    str(("Var-prime", ",")): ["epsilon"],
 
     # Factor-prime
     str(("Factor-prime", "(")): ["(", "Args", ")"],
@@ -259,6 +275,8 @@ parsing_table = {
     str(("Factor-prime", "==")): ["epsilon"],
     str(("Factor-prime", ";")): ["epsilon"],
     str(("Factor-prime", ")")): ["epsilon"],
+    str(("Factor-prime", "]")): ["epsilon"],
+    str(("Factor-prime", ",")): ["epsilon"],
 
     # Factor-zegond
     str(("Factor-zegond", "(")): ["(", "Expression", ")"],
