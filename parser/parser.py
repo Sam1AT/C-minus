@@ -52,7 +52,7 @@ def print_tree_children(node, f, prefix):
 
 def write_syntax_error(error_token, error_token_type, typ, lineno , output_path="syntax_errors.txt"):
     with open(output_path, "a") as f:
-        l =  ['ID', 'NUM', "Params"]
+        l =  ['ID', 'NUM', ]
         if error_token_type in l or error_token == None:
             error_token = error_token_type
 
@@ -95,7 +95,6 @@ def predictive_parse(input_code):
                 key = str((top, current_token))
                 key_with_type = str((top, current_token_type))
                 production = parsing_table.get(key, parsing_table.get(key_with_type))
-                print("->", production, current_token, top)
                 if top == "$" and current_token == "$":
                     current_node = Node(top)
                     if parent_node:
@@ -125,12 +124,11 @@ def predictive_parse(input_code):
                             stack.append((symbol, current_node))
 
                 else:
-                    print(production, current_token, top, top in terminals)
                     if current_token == '$':
                         current_token_type,current_token = next(token_gen)
                         continue
                     elif production:
-                        write_syntax_error(current_token, current_token_type, typ="missing", lineno=lineno)
+                        write_syntax_error(None ,top, typ="missing", lineno=lineno)
                     else:
                         if top in terminals:
                             write_syntax_error(None ,top, typ="missing", lineno=lineno)
