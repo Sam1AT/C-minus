@@ -11,11 +11,39 @@ class Node:
         self.children.append(child)
 
 
-def print_tree_to_file(node, f, depth=0):
-    indent = '│   ' * (depth - 1) + ('├── ' if depth > 0 else '')
-    f.write(f"{indent}{node.symbol}\n")
+def print_tree_to_file(node, f, prefix=""):
+    """
+    Print a tree so that each branch uses ├── for non-last children and └── for last children.
+    """
+    f.write(f"{prefix}{node.symbol}\n")
+    child_count = len(node.children)
     for i, child in enumerate(node.children):
-        print_tree_to_file(child, f, depth + 1)
+        is_last = (i == child_count - 1)
+        branch = "└── " if is_last else "├── "
+
+        if is_last:
+            next_prefix = prefix + "    "
+        else:
+            next_prefix = prefix + "│   "
+
+        f.write(f"{prefix}{branch}{child.symbol}\n")
+        print_tree_children(child, f, next_prefix)
+
+
+def print_tree_children(node, f, prefix):
+    child_count = len(node.children)
+    for i, child in enumerate(node.children):
+        is_last = (i == child_count - 1)
+        branch = "└── " if is_last else "├── "
+
+        if is_last:
+            next_prefix = prefix + "    "
+        else:
+            next_prefix = prefix + "│   "
+
+        f.write(f"{prefix}{branch}{child.symbol}\n")
+        print_tree_children(child, f, next_prefix)
+
 
 def write_syntax_error(error_token, output_path="syntax_errors.txt"):
     with open(output_path, "w") as f:
@@ -78,7 +106,7 @@ def predictive_parse(input_code):
             else:
                 write_syntax_error(current_token)
 
-
+        root.add_child(Node("$"))
         print_tree_to_file(root, tree_output)
         write_no_syntax_error()
 
