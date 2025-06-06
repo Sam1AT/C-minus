@@ -1,10 +1,16 @@
-/* sample 2 */
+/* sample 8 */
 
-void main(void){
-    int a[100];
-    int b[100];
-    int c;
+int func(a){
+    if a<2 {
+        return 2
+    }else{
+        return
+    }
+}
 
-    c = a[21] * 2 - 1;
-    b[12] = c + 2 - a[1];
+void main  ( void )
+{
+	int i;
+	i = func(2+4);
+	output(i;
 }

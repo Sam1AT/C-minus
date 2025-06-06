@@ -6,7 +6,8 @@
 6.	return
 7.	until
 8.	void
-9.	main
+9.	func
 10.	a
-11.	b
-12.	c
+11.	main
+12.	i
+13.	output
